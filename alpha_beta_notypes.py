@@ -1,6 +1,4 @@
-from __future__ import annotations
 from unittest import TestCase
-from typing import List, Optional
 
 
 tests = [["2 4 13 11 1 3 3 7 3 3 2 2", "3 6 7 10 11"], [
@@ -12,7 +10,7 @@ class TreeNode:
     Represents a node in the tree, contains all necessary fields to execute alpha-beta pruning
     """
 
-    def __init__(self: TreeNode, is_min: bool, value: Optional[int | float] = None, is_leaf: bool = False, index=None) -> None:
+    def __init__(self, is_min, value=None, is_leaf=False, index=None):
         """
         The initializer for the TreeNode class, contains all integral fields for a tree node
 
@@ -23,7 +21,7 @@ class TreeNode:
             is_leaf (bool, optional): Whether the node is a leaf node. Defaults to False.
             index (_type_, optional): The index of the tree node (used for output). Defaults to None.
         """
-        self.children: List[TreeNode] = []  # Left to right
+        self.children = []  # Left to right
         self.is_min = is_min
         self.value = value if value is not None else float(
             'inf') if is_min else float('-inf')
@@ -50,7 +48,7 @@ class AlphaBetaPruning:
                o    oo   oo  oo   oo   oo    o
     """
 
-    def __init__(self: AlphaBetaPruning, nodes: List[int]) -> None:
+    def __init__(self, nodes) -> None:
         """
         Initializes the Tree enabled with Alpha-Beta pruning capabilities
 
@@ -68,7 +66,7 @@ class AlphaBetaPruning:
         self.root_node = TreeNode(False)
         self.root_node.children = [
             TreeNode(True), TreeNode(True), TreeNode(True)]
-        self.explored_indexes: set[int] = set()
+        self.explored_indexes = set()
         self.theoretical_range = set(range(0, len(nodes)))
 
         ind = 0
@@ -87,7 +85,7 @@ class AlphaBetaPruning:
             right_max.children += [TreeNode(False, nodes[ind], True, ind)]
             ind += 1
 
-    def run_traversal(self: AlphaBetaPruning, curr_node: Optional[TreeNode] = None, alpha: Optional[float | int] = None, beta: Optional[float | int] = None) -> None:
+    def run_traversal(self, curr_node=None, alpha=None, beta=None) -> None:
         """
         Runs the traversal of the tree, with alpha-beta pruning enabled
 
@@ -129,7 +127,7 @@ class AlphaBetaPruning:
             return computed_value
 
 
-def main(run_input=False):
+def main(run_input=True):
     """
     The main loop, contains a boolean denoting whether to process the user input
 
@@ -139,7 +137,7 @@ def main(run_input=False):
     if run_input:
         inp = input()
         solver = AlphaBetaPruning([int(x)
-                                   for x in inp[0].split(' ')])
+                                   for x in inp.split(' ')])
         solver.run_traversal(solver.root_node)
         pruned_nodes = ' '.join([str(x) for x in sorted(
             solver.theoretical_range.difference(solver.explored_indexes))])
